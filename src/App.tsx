@@ -27,7 +27,7 @@ export default function App(){
   {iosHint&&<div className="ios-tip">On iPhone/iPad: tap <strong>Share</strong> in Safari, then choose <strong>Add to Home Screen</strong>.</div>}
   <section className="hero"><p className="eyebrow">LOCAL • PRIVATE • SIMPLE</p><h1>Create your PDF<br/><em>in sequence.</em></h1><p>Turn photos into one polished A4 document—right on your device.</p></section>
   <section className="workspace">
-   <div className="privacy">🔒 Your photos stay on your device. No uploads to our server.</div>
+   <div className="privacy"></div>
    {error&&<div className="error">{error}<button onClick={()=>setError('')}><X size={16}/></button></div>}
    <div className="upload-row"><div><h2>{pages.length ? `Upload ${next} Photo` : 'Upload First Photo'}</h2><p>Each photo becomes one A4 page.</p></div><div className="upload-actions"><button className="add-small" disabled={busy} onClick={()=>one.current?.click()}><ImagePlus size={16}/> Add photo</button><button className="primary upload-primary" disabled={busy} onClick={()=>one.current?.click()}><Upload size={18}/> Upload photo</button></div></div>
    <input ref={one} hidden type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>{void add(e.target.files??[]);e.currentTarget.value=''}}/><input ref={bulk} hidden type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={e=>{void add(e.target.files??[]);e.currentTarget.value=''}}/><input ref={replace} hidden type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>{void replaceImage(e.target.files);e.currentTarget.value=''}}/>
