@@ -1,0 +1,6 @@
+import type { PageItem } from './types'
+const DB='sequencepdf', STORE='session', KEY='current'
+function db(){return new Promise<IDBDatabase>((yes,no)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE);r.onsuccess=()=>yes(r.result);r.onerror=()=>no(r.error)})}
+export async function saveSession(pages: PageItem[]) { try {const d=await db();const clean=pages.map(({source,thumb,...p})=>({...p,source:'',thumb:''}));const t=d.transaction(STORE,'readwrite');t.objectStore(STORE).put(clean,KEY);await new Promise<void>((yes,no)=>{t.oncomplete=()=>yes();t.onerror=()=>no(t.error)});d.close()} catch { /* storage recovery is unavailable */ } }
+export async function restoreSession(): Promise<PageItem[]> { try {const d=await db();const t=d.transaction(STORE);const r=t.objectStore(STORE).get(KEY);const data=await new Promise<PageItem[]>((yes,no)=>{r.onsuccess=()=>yes(r.result??[]);r.onerror=()=>no(r.error)});d.close();return data.map(p=>{const source=URL.createObjectURL(p.file);return {...p,source,thumb:source}})}catch{return []} }
+export async function clearSession(){try{const d=await db();const t=d.transaction(STORE,'readwrite');t.objectStore(STORE).delete(KEY);d.close()}catch{/* no session */}}
